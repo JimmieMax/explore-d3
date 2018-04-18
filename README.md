@@ -120,7 +120,7 @@ d3.select("#transitions").select("figure")
         .attr("transform", "translate(20,150)")
         .call(axis);
 ```
-## Bar Chart
+## Complete Bar Chart
 ```
     const height = 300
         , width = "100%"
