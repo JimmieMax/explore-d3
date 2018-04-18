@@ -10,6 +10,11 @@ d3 v5
 $ git clone https://github.com/JimmieMax/explore-d3.git
 $ npm install
 ```
+## Compile & Browse :cherries:
+```
+npm run compile
+npm run server
+```
 ## Selections
 ```
 d3.select("#selections").select("figure")
