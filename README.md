@@ -124,3 +124,4 @@ axis.svg.append("g")
     .attr("transform", "translate(20,150)")
     .call(axis.axis);
 ```
+## Bar Chart

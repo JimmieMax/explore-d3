@@ -21,10 +21,14 @@
         background: #E0E0E0;
         padding: 20px;
         border-left: 4px solid #808080;
+        overflow: auto;
     }
 </style>
 
 <body>
+    <header>
+        <img width="100%" src="../store/img/banner-d3.jpg" alt="">
+    </header>
     <section id="selections">
         <h2>
             <a class="title" href="#selections">#Selections</a>
@@ -106,9 +110,7 @@
         </h2>
         <figure>
         </figure>
-        <pre>const simpleChart = {
-                rectHeight: 25
-            };
+        <pre>const rectHeight = 25
             d3.select("#simple-chart").select("figure")
                 .append("svg")
                 .attr("width", "100%")
@@ -118,10 +120,10 @@
                 .enter()
                 .append("rect")
                 .attr("x", 20)
-                .attr("y", (d, i) => i * simpleChart.rectHeight)
+                .attr("y", (d, i) => i * rectHeight)
                 .attr("width", d => d)
-                .attr("height", simpleChart.rectHeight - 2)
-                .attr("fill", "steelblue");</pre>
+                .attr("height", rectHeight - 2)
+                .attr("fill", "orange");</pre>
     </section>
     <section id="scale">
         <h2>
@@ -129,28 +131,24 @@
         </h2>
         <figure>
         </figure>
-        <pre>const scale = {}
-                scale.dataset = [1.2, 2.3, 0.9, 1.5, 3.3];
-                scale.min = d3.min(scale.dataset);
-                scale.max = d3.max(scale.dataset);
-                scale.rectHeight = 25;
-                scale.linear = d3.scaleLinear()
-                    .domain([scale.min, scale.max])
-                    .range([0, 300]);
-                
-                d3.select("#scale").select("figure")
-                    .append("svg")
-                    .attr("width", "100%")
-                    .attr("height", 120)
-                    .selectAll("rect")
-                    .data(scale.dataset)
-                    .enter()
-                    .append("rect")
-                    .attr("x", 20)
-                    .attr("y", (d, i) => i * scale.rectHeight)
-                    .attr("width", d => scale.linear(d))
-                    .attr("height", scale.rectHeight - 2)
-                    .attr("fill", "orange");</pre>
+        <pre>const dataset = [1.2, 2.3, 0.9, 1.5, 3.3]
+            , rectHeight = 25
+            , linear = d3.scaleLinear()
+                .domain([0, d3.max(dataset)])
+                .range([0, 300]);
+        d3.select("#scale").select("figure")
+            .append("svg")
+            .attr("width", "100%")
+            .attr("height", 120)
+            .selectAll("rect")
+            .data(dataset)
+            .enter()
+            .append("rect")
+            .attr("x", 20)
+            .attr("y", (d, i) => i * rectHeight)
+            .attr("width", d => linear(d))
+            .attr("height", rectHeight - 2)
+            .attr("fill", "orange");</pre>
     </section>
     <section id="axis">
         <h2>
@@ -158,31 +156,95 @@
         </h2>
         <figure>
         </figure>
-        <pre>const axis = {};
-                axis.dataset = [2.5, 2.1, 1.7, 1.3, 0.9];
-                axis.rectHeight = 25;
-                axis.linear = d3.scaleLinear()
-                    .domain([0, d3.max(axis.dataset)])
-                    .range([0, 300]);
-                axis.axis = d3.axisBottom(axis.linear);
-                axis.svg = d3.select("#axis").select("figure")
-                    .append("svg");
-                
-                axis.svg.attr("width", "100%")
-                    .attr("height", 200)
-                    .selectAll("rect")
-                    .data(axis.dataset)
-                    .enter()
-                    .append("rect")
-                    .attr("x", 20)
-                    .attr("y", (d, i) => i * axis.rectHeight + 20)
-                    .attr("width", d => axis.linear(d))
-                    .attr("height", axis.rectHeight - 2)
-                    .attr("fill", "orange");
-                
-                axis.svg.append("g")
-                    .attr("transform", "translate(20,150)")
-                    .call(axis.axis);</pre>
+        <pre>const dataset = [2.5, 2.1, 1.7, 1.3, 0.9]
+            , rectHeight = 25
+            , linear = d3.scaleLinear()
+                .domain([0, d3.max(dataset)])
+                .range([0, 300])
+            , axis = d3.axisBottom(linear)
+                .ticks(5)
+            , svg = d3.select("#axis").select("figure")
+                .append("svg")
+                .attr("width", "100%")
+                .attr("height", 200);
+        // append bar
+        svg.selectAll("rect")
+            .data(dataset)
+            .enter()
+            .append("rect")
+            .attr("x", 20)
+            .attr("y", (d, i) => i * rectHeight + 20)
+            .attr("width", d => linear(d))
+            .attr("height", rectHeight - 2)
+            .attr("fill", "orange");
+        //append axis
+        svg.append("g")
+            .attr("transform", "translate(20,150)")
+            .call(axis);</pre>
+    </section>
+    <section id="bar-chart">
+        <h2>
+            <a class="title" href="#bar-chart">#Complete Bar Chart</a>
+        </h2>
+        <figure>
+        </figure>
+        <pre>const height = 300
+            , width = "100%"
+            , padding = {
+                left: 30,
+                right: 30,
+                top: 20,
+                bottom: 20
+            }
+            , rectPadding = 4
+            , rectWidth = 25
+            , dataset = [10, 20, 30, 40, 33, 24, 12, 5]
+            //xScale
+            , xScale = d3.scaleOrdinal()
+                .domain(d3.range(dataset.length))
+                .range(d3.range((rectWidth - rectPadding) / 2 + rectPadding, rectWidth * dataset.length, rectWidth * dataset.length / 8))
+            //yScale
+            , yScale = d3.scaleLinear()
+                .domain([0, d3.max(dataset)])
+                .range([height - padding.top - padding.bottom, 0])
+            //xAxis
+            , xAxis = d3.axisBottom(xScale)
+            //yAxis
+            , yAxis = d3.axisLeft(yScale)
+            , svg = d3.select("#bar-chart").select("figure")
+                .append("svg")
+                .attr("width", width)
+                .attr("height", height);
+        //append rect
+        svg.selectAll("rect")
+            .data(dataset)
+            .enter()
+            .append("rect")
+            .attr("transform", "translate(" + padding.left + "," + padding.top + ")")
+            .attr("x", (d, i) => i * rectWidth + rectPadding)
+            .attr("y", d => yScale(d))
+            .attr("width", rectWidth - rectPadding)
+            .attr("height", d => height - padding.top - padding.bottom - yScale(d))
+            .attr("fill", "orange");
+        // append text
+        svg.selectAll("text")
+            .data(dataset)
+            .enter()
+            .append("text")
+            .attr("transform", "translate(" + padding.left + "," + padding.top + ")")
+            .attr("x", (d, i) => i * rectWidth + rectPadding)
+            .attr("y", d => yScale(d) - 2)
+            .attr("text-anchor", "middle")
+            .attr("dx", (rectWidth - rectPadding) / 2)
+            .text(d => d);
+        //append xAxis
+        svg.append("g")
+            .attr("transform", "translate(" + padding.left + "," + (height - padding.bottom + 2) + ")")
+            .call(xAxis);
+        //append yAxis
+        svg.append("g")
+            .attr("transform", "translate(" + padding.left + "," + padding.top + ")")
+            .call(yAxis);</pre>
     </section>
     <script src="../dist/index.bundle.js"></script>
 </body>
