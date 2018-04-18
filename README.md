@@ -56,7 +56,7 @@ d3.select("#transitions").select("figure")
 ```
 ## Simple Chart
 ```
-    const rectHeight = 25
+const rectHeight = 25
     d3.select("#simple-chart").select("figure")
         .append("svg")
         .attr("width", "100%")
@@ -69,11 +69,11 @@ d3.select("#transitions").select("figure")
         .attr("y", (d, i) => i * rectHeight)
         .attr("width", d => d)
         .attr("height", rectHeight - 2)
-        .attr("fill", "orange");
+        .attr("fill", "orange");    
 ```
 ## Scale
 ```
-    const dataset = [1.2, 2.3, 0.9, 1.5, 3.3]
+const dataset = [1.2, 2.3, 0.9, 1.5, 3.3]
         , rectHeight = 25
         , linear = d3.scaleLinear()
             .domain([0, d3.max(dataset)])
@@ -90,11 +90,11 @@ d3.select("#transitions").select("figure")
         .attr("y", (d, i) => i * rectHeight)
         .attr("width", d => linear(d))
         .attr("height", rectHeight - 2)
-        .attr("fill", "orange");
+        .attr("fill", "orange");   
 ```
 ## Axis
 ```
-    const dataset = [2.5, 2.1, 1.7, 1.3, 0.9]
+const dataset = [2.5, 2.1, 1.7, 1.3, 0.9]
         , rectHeight = 25
         , linear = d3.scaleLinear()
             .domain([0, d3.max(dataset)])
@@ -118,11 +118,11 @@ d3.select("#transitions").select("figure")
     //append axis
     svg.append("g")
         .attr("transform", "translate(20,150)")
-        .call(axis);
+        .call(axis);   
 ```
 ## Complete Bar Chart
 ```
-    const height = 300
+const height = 300
         , width = "100%"
         , padding = {
             left: 30,
