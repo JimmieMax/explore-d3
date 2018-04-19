@@ -78,99 +78,280 @@ module.exports = __webpack_require__(1);
 
 /***/ }),
 /* 1 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var d3__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
 
+
+var _d = __webpack_require__(2);
+
+var d3 = _interopRequireWildcard(_d);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 // #Selections
 {
-    d3__WEBPACK_IMPORTED_MODULE_0__["select"]("#selections").select("figure").selectAll("p").style("color", "orange");
+    d3.select("#selections").select("figure").selectAll("p").style("color", "orange");
 }
 
 // #Dynamic Properties
 {
-    d3__WEBPACK_IMPORTED_MODULE_0__["select"]("#properties").select("figure").selectAll("p").style("background-color", (d, i) => i % 2 ? "#fff" : "#eee");
+    d3.select("#properties").select("figure").selectAll("p").style("background-color", function (d, i) {
+        return i % 2 ? "#fff" : "#eee";
+    });
 }
 
 // #Enter and Exit
 {
     // Enter
-    d3__WEBPACK_IMPORTED_MODULE_0__["select"]("#enter-exit").select("figure").select(".enter-box").selectAll("p").data([4, 8, 15, 16, 23]).enter().append("p") //父选择器后面添加元素
+    d3.select("#enter-exit").select("figure").select(".enter-box").selectAll("p").data([4, 8, 15, 16, 23]).enter().append("p") //父选择器后面添加元素
     // .insert("p","p:nth-child(1)") //插入具体的位置
-    .text(d => "I’m append number " + d + "!");
+    .text(function (d) {
+        return "I’m append number " + d + "!";
+    });
     //Exit
-    d3__WEBPACK_IMPORTED_MODULE_0__["select"]("#enter-exit").select("figure").select("exit-box").selectAll("span").data(['a', 'b', 'c']).attr("title", d => "I’m " + d).exit().remove(); //删除元素
+    d3.select("#enter-exit").select("figure").select("exit-box").selectAll("span").data(['a', 'b', 'c']).attr("title", function (d) {
+        return "I’m " + d;
+    }).exit().remove(); //删除元素
 }
 
 // #Transitions
 {
-    d3__WEBPACK_IMPORTED_MODULE_0__["select"]("#transitions").select("figure").transition().duration(2000).delay(1000).style("background-color", "black");
+    d3.select("#transitions").select("figure").transition().duration(2000).delay(1000).style("background-color", "black");
 }
 
 // #Simple Chart
 {
-    const rectHeight = 25;
-    d3__WEBPACK_IMPORTED_MODULE_0__["select"]("#simple-chart").select("figure").append("svg").attr("width", "100%").attr("height", 120).selectAll("rect").data([250, 210, 170, 130, 90]).enter().append("rect").attr("x", 20).attr("y", (d, i) => i * rectHeight).attr("width", d => d).attr("height", rectHeight - 2).attr("fill", "orange");
+    var rectHeight = 25;
+    d3.select("#simple-chart").select("figure").append("svg").attr("width", "100%").attr("height", 120).selectAll("rect").data([250, 210, 170, 130, 90]).enter().append("rect").attr("x", 20).attr("y", function (d, i) {
+        return i * rectHeight;
+    }).attr("width", function (d) {
+        return d;
+    }).attr("height", rectHeight - 2).attr("fill", "orange");
 }
 
 // #Scale
 {
-    const dataset = [1.2, 2.3, 0.9, 1.5, 3.3],
-          rectHeight = 25,
-          linear = d3__WEBPACK_IMPORTED_MODULE_0__["scaleLinear"]().domain([0, d3__WEBPACK_IMPORTED_MODULE_0__["max"](dataset)]).range([0, 300]);
-    d3__WEBPACK_IMPORTED_MODULE_0__["select"]("#scale").select("figure").append("svg").attr("width", "100%").attr("height", 120).selectAll("rect").data(dataset).enter().append("rect").attr("x", 20).attr("y", (d, i) => i * rectHeight).attr("width", d => linear(d)).attr("height", rectHeight - 2).attr("fill", "orange");
+    var dataset = [1.2, 2.3, 0.9, 1.5, 3.3],
+        _rectHeight = 25,
+        linear = d3.scaleLinear().domain([0, d3.max(dataset)]).range([0, 300]);
+    d3.select("#scale").select("figure").append("svg").attr("width", "100%").attr("height", 120).selectAll("rect").data(dataset).enter().append("rect").attr("x", 20).attr("y", function (d, i) {
+        return i * _rectHeight;
+    }).attr("width", function (d) {
+        return linear(d);
+    }).attr("height", _rectHeight - 2).attr("fill", "orange");
 }
 
 // #Axis
 {
-    const dataset = [2.5, 2.1, 1.7, 1.3, 0.9],
-          rectHeight = 25,
-          linear = d3__WEBPACK_IMPORTED_MODULE_0__["scaleLinear"]().domain([0, d3__WEBPACK_IMPORTED_MODULE_0__["max"](dataset)]).range([0, 300]),
-          axis = d3__WEBPACK_IMPORTED_MODULE_0__["axisBottom"](linear).ticks(5),
-          svg = d3__WEBPACK_IMPORTED_MODULE_0__["select"]("#axis").select("figure").append("svg").attr("width", "100%").attr("height", 200);
+    var _dataset = [2.5, 2.1, 1.7, 1.3, 0.9],
+        _rectHeight2 = 25,
+        _linear = d3.scaleLinear().domain([0, d3.max(_dataset)]).range([0, 300]),
+        axis = d3.axisBottom(_linear).ticks(5),
+        svg = d3.select("#axis").select("figure").append("svg").attr("width", "100%").attr("height", 200);
     // append bar
-    svg.selectAll("rect").data(dataset).enter().append("rect").attr("x", 20).attr("y", (d, i) => i * rectHeight + 20).attr("width", d => linear(d)).attr("height", rectHeight - 2).attr("fill", "orange");
+    svg.selectAll("rect").data(_dataset).enter().append("rect").attr("x", 20).attr("y", function (d, i) {
+        return i * _rectHeight2 + 20;
+    }).attr("width", function (d) {
+        return _linear(d);
+    }).attr("height", _rectHeight2 - 2).attr("fill", "orange");
     //append axis
     svg.append("g").attr("transform", "translate(20,150)").call(axis);
 }
 
 // #Complete Bar Chart
 {
-    const height = 300,
-          width = "100%",
-          padding = {
+    var height = 300,
+        width = 300,
+        padding = {
         left: 30,
         right: 30,
         top: 20,
         bottom: 20
     },
-          rectPadding = 4,
-          rectWidth = 25,
-          dataset = [10, 20, 30, 40, 33, 24, 12, 5]
+        rectPadding = 4,
+        _dataset2 = [10, 20, 30, 40, 33, 24, 12, 5],
+        svgWidth = width - padding.left - padding.right,
+        rectWidth = svgWidth / _dataset2.length - rectPadding
     //xScale
     ,
-          xScale = d3__WEBPACK_IMPORTED_MODULE_0__["scaleOrdinal"]().domain(d3__WEBPACK_IMPORTED_MODULE_0__["range"](dataset.length)).range(d3__WEBPACK_IMPORTED_MODULE_0__["range"]((rectWidth - rectPadding) / 2 + rectPadding, rectWidth * dataset.length, rectWidth * dataset.length / 8))
+        xScale = d3.scaleLinear().domain([0, _dataset2.length - 1]).range([0, width - padding.left - padding.right])
     //yScale
     ,
-          yScale = d3__WEBPACK_IMPORTED_MODULE_0__["scaleLinear"]().domain([0, d3__WEBPACK_IMPORTED_MODULE_0__["max"](dataset)]).range([height - padding.top - padding.bottom, 0])
+        yScale = d3.scaleLinear().domain([0, d3.max(_dataset2)]).range([height - padding.top - padding.bottom, 0])
     //xAxis
     ,
-          xAxis = d3__WEBPACK_IMPORTED_MODULE_0__["axisBottom"](xScale)
+        xAxis = d3.axisBottom(xScale).ticks(8)
     //yAxis
     ,
-          yAxis = d3__WEBPACK_IMPORTED_MODULE_0__["axisLeft"](yScale),
-          svg = d3__WEBPACK_IMPORTED_MODULE_0__["select"]("#bar-chart").select("figure").append("svg").attr("width", width).attr("height", height);
+        yAxis = d3.axisLeft(yScale),
+        _svg = d3.select("#bar-chart").select("figure").append("svg").attr("width", width).attr("height", height);
     //append rect
-    svg.selectAll("rect").data(dataset).enter().append("rect").attr("transform", "translate(" + padding.left + "," + padding.top + ")").attr("x", (d, i) => i * rectWidth + rectPadding).attr("y", d => yScale(d)).attr("width", rectWidth - rectPadding).attr("height", d => height - padding.top - padding.bottom - yScale(d)).attr("fill", "orange");
+    _svg.selectAll("rect").data(_dataset2).enter().append("rect").on("mouseover", function (d, i) {
+        d3.select(this).attr("fill", "#ff5722");
+    }).on("mouseout", function (d, i) {
+        d3.select(this).transition().duration(500).attr("fill", "orange");
+    }).attr("transform", "translate(" + padding.left + "," + padding.top + ")").attr("x", function (d, i) {
+        return xScale(i) + rectPadding;
+    }).attr("width", rectWidth).attr("y", yScale(yScale.domain()[0])).attr("height", 0).transition().duration(2000).delay(function (d, i) {
+        return i * 200;
+    }).attr("y", function (d) {
+        return yScale(d);
+    }).attr("height", function (d) {
+        return height - padding.top - padding.bottom - yScale(d);
+    }).attr("cursor", "pointer").attr("fill", "orange");
     // append text
-    svg.selectAll("text").data(dataset).enter().append("text").attr("transform", "translate(" + padding.left + "," + padding.top + ")").attr("x", (d, i) => i * rectWidth + rectPadding).attr("y", d => yScale(d) - 2).attr("text-anchor", "middle").attr("dx", (rectWidth - rectPadding) / 2).text(d => d);
+    _svg.selectAll("text").data(_dataset2).enter().append("text").attr("transform", "translate(" + padding.left + "," + padding.top + ")").attr("x", function (d, i) {
+        return xScale(i) + rectPadding;
+    }).attr("y", function (d) {
+        return yScale(d) - 2;
+    }).attr("text-anchor", "middle").attr("dx", (rectWidth - rectPadding) / 2).text(function (d) {
+        return d;
+    });
     //append xAxis
-    svg.append("g").attr("transform", "translate(" + padding.left + "," + (height - padding.bottom + 2) + ")").call(xAxis);
+    _svg.append("g").attr("transform", "translate(" + (padding.left + rectWidth / 2 + rectPadding) + "," + (height - padding.bottom + 2) + ")").call(xAxis);
     //append yAxis
-    svg.append("g").attr("transform", "translate(" + padding.left + "," + padding.top + ")").call(yAxis);
+    _svg.append("g").attr("transform", "translate(" + padding.left + "," + padding.top + ")").call(yAxis);
+}
+// #Pie Chart
+{
+    var _width = 300,
+        _height = 300,
+        _dataset3 = [35, 20, 43, 55, 13],
+        pie = d3.pie(),
+        piedata = pie(_dataset3),
+        outerRadius = 120 //外半径
+    ,
+        innerRadius = 50 //内半径，为0则中间没有空白
+    ,
+        color = ['#FFE100', 'grey', 'orange', 'red', '#25acea'],
+        _svg2 = d3.select("#pie-chart").select("figure").append("svg").attr('width', _width).attr('height', _height),
+        arc = d3.arc() //弧生成器
+    .innerRadius(innerRadius) //设置内半径
+    .outerRadius(outerRadius) //设置外半径
+    ,
+        arcOver = d3.arc().innerRadius(innerRadius).outerRadius(outerRadius + 10),
+        arcs = _svg2.selectAll("g").data(piedata).enter().append("g").style('cursor', 'pointer').attr("transform", "translate(" + _width / 2 + "," + _width / 2 + ")");
+    /*append path*/
+    arcs.append('path').attr('fill', function (d, i) {
+        return color[i];
+    }).attr('d', function (d) {
+        return arc(d);
+    }).on('mouseover', function (d, i) {
+        d3.select(this).attr('d', function (d) {
+            return arcOver(d);
+        });
+    }).on('mouseout', function (d, i) {
+        d3.select(this).attr('d', function (d) {
+            return arc(d);
+        });
+    });
+    /*append text*/
+    arcs.append('text').attr('transform', function (d) {
+        return 'translate(' + arc.centroid(d) + ')';
+    }).attr('text-anchor', 'middle').attr('fill', '#fff').text(function (d) {
+        return d.data;
+    });
+    // .text(d=> ((d.data / 60).toFixed(2)) * 100 + '%');
+}
+// #Force Chart
+{
+    var graph = {
+        "nodes": [{ name: '桂林' }, { name: '广州' }, { name: '南京' }, { name: '杭州' }, { name: '北京' }, { name: '上海' }, { name: '深圳' }, { name: '福州' }, { name: '厦门' }, { name: '邯郸' }, { name: '长沙' }, { name: '岳阳' }, { name: '香港' }],
+        "links": [{ "source": 0, "target": 1 }, { "source": 1, "target": 2 }, { "source": 2, "target": 0 }, { "source": 1, "target": 3 }, { "source": 3, "target": 2 }, { "source": 3, "target": 4 }, { "source": 4, "target": 5 }, { "source": 5, "target": 6 }, { "source": 5, "target": 7 }, { "source": 6, "target": 7 }, { "source": 6, "target": 8 }, { "source": 7, "target": 8 }, { "source": 9, "target": 4 }, { "source": 9, "target": 5 }, { "source": 9, "target": 11 }, { "source": 9, "target": 10 }, { "source": 10, "target": 11 }, { "source": 11, "target": 12 }, { "source": 12, "target": 10 }]
+    },
+        _width2 = 800,
+        _height2 = 500,
+        _svg3 = d3.select("#force-chart").select("figure").append("svg").attr("width", _width2).attr("height", _height2),
+        forceLink = d3.forceLink(graph.links).distance(50),
+        _color = d3.schemeSet3,
+        drag = d3.drag() //define drag
+    .on("start", function (d) {
+        if (!d3.event.active) {
+            force.alphaTarget(.1).restart();
+        }
+        d.fx = d.x;
+        d.fy = d.y;
+    }).on("drag", function (d) {
+        d.fx = d3.event.x;
+        d.fy = d3.event.y;
+    }),
+        link = _svg3.selectAll(".link") /*append line*/
+    .data(graph.links).enter().append("line").style("stroke", "#ccc").style("stroke-width", 1),
+        nodes = _svg3.selectAll("circle") /*append nodes */
+    .data(graph.nodes).enter().append("circle").attr("r", 20).attr("cursor", "move").style('fill', function (d, i) {
+        return _color[i];
+    }).call(drag),
+        texts = _svg3.selectAll("text") /*append texts*/
+    .data(graph.nodes).enter().append("text").style("fill", "black").attr("dx", 20).attr("dy", 8).text(function (d) {
+        return d.name;
+    }),
+        force = d3.forceSimulation().nodes(graph.nodes).force("link", forceLink).force("charge", d3.forceManyBody().strength(-100)).force("center", d3.forceCenter(_width2 / 2, _height2 / 2)).on("tick", function () {
+        link.attr("x1", function (d) {
+            return d.source.x;
+        }) //update link
+        .attr("y1", function (d) {
+            return d.source.y;
+        }).attr("x2", function (d) {
+            return d.target.x;
+        }).attr("y2", function (d) {
+            return d.target.y;
+        });
+        nodes.attr("cx", function (d) {
+            return d.x;
+        }) //update nodes
+        .attr("cy", function (d) {
+            return d.y;
+        });
+        texts.attr("x", function (d) {
+            return d.x;
+        }) //update texts
+        .attr("y", function (d) {
+            return d.y;
+        });
+    });
+}
+// #Chord Chart
+{
+    var city_name = ["北京", "上海", "广州", "深圳", "香港"],
+        population = [[1000, 3045, 4567, 1234, 3714], [3214, 2000, 2060, 124, 3234], [8761, 6545, 3000, 8045, 647], [3211, 1067, 3214, 4000, 1006], [2146, 1034, 6745, 4764, 5000]],
+        _width3 = 500,
+        _height3 = 500,
+        _innerRadius = _width3 / 2 * 0.7,
+        outRadius = _innerRadius * 1.1,
+        _color2 = d3.schemeSet3,
+        chord_layout = d3.chord()(population),
+        groups = chord_layout.groups,
+        chords = chord_layout.splice(0, chord_layout.length),
+        outer_arc = d3.arc().innerRadius(_innerRadius).outerRadius(outRadius),
+        _svg4 = d3.select("#chord-chart").select("figure").append('svg').attr('width', _width3).attr('height', _height3).append('g').attr("transform", "translate(" + _width3 / 2 + "," + _height3 / 2 + ")"),
+        g_outer = _svg4.append("g"),
+        ribbon = d3.ribbon() //draw ribbon
+    .radius(_innerRadius);
+    console.log('grous，chords', groups, chords);
+    g_outer.selectAll("path") //append outer
+    .data(groups).enter().append("path").style("fill", function (d) {
+        return _color2[d.index];
+    }).style("stroke", function (d) {
+        return _color2[d.index];
+    }).attr("d", outer_arc);
+    g_outer.selectAll("text") //append text
+    .data(groups).enter().append("text").each(function (d, i) {
+        d.angle = (d.startAngle + d.endAngle) / 2;
+        d.name = city_name[i];
+    }).attr("dy", ".35em").attr("transform", function (d) {
+        return "rotate(" + d.angle * 180 / Math.PI + ")" + "translate(0," + -1.0 * (outRadius + 10) + ")" + (d.angle > Math.PI * 3 / 4 && d.angle < Math.PI * 5 / 4 ? "rotate(180)" : "");
+    }).text(function (d) {
+        return d.name;
+    });
+    _svg4.append('g') /*append ribbon*/
+    .selectAll('path').data(chords).enter().append('path').attr('d', ribbon).style('cursor', "pointer").style('stroke', "black").style('opacity', 0.8).style('fill', function (d) {
+        return _color2[d.source.index];
+    }).on('mouseover', function (d, i) {
+        d3.select(this).style('fill', 'yellow');
+    }).on('mouseout', function (d, i) {
+        d3.select(this).transition().duration(1000).style('fill', _color2[d.source.index]);
+    });
 }
 console.log();
 
