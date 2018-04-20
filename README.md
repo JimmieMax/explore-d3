@@ -13,7 +13,7 @@ $ npm install
 ## Compile & Browse :cherries:
 ```
 npm run compile
-npm run server
+npm start
 ```
 ## Selections
 ```
