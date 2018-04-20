@@ -328,7 +328,6 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
         g_outer = _svg4.append("g"),
         ribbon = d3.ribbon() //draw ribbon
     .radius(_innerRadius);
-    console.log('grous，chords', groups, chords);
     g_outer.selectAll("path") //append outer
     .data(groups).enter().append("path").style("fill", function (d) {
         return _color2[d.index];
@@ -351,6 +350,118 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
         d3.select(this).style('fill', 'yellow');
     }).on('mouseout', function (d, i) {
         d3.select(this).transition().duration(1000).style('fill', _color2[d.source.index]);
+    });
+}
+// #Cluster Chart
+{
+    var _width4 = 600,
+        _height4 = 600,
+        _svg5 = d3.select("#cluster-chart").select("figure").append('svg').attr('width', _width4).attr('height', _height4);
+    d3.json('../store/json/area.json?t=' + new Date().getTime()).then(function (json) {
+        var clusterCreator = d3.cluster().size([_width4, _height4 - 200]),
+            hierarchyData = d3.hierarchy(json),
+            clusterData = clusterCreator(hierarchyData)
+        /*nodes*/
+        ,
+            nodes = clusterData.descendants()
+        /*links*/
+        ,
+            links = clusterData.links();
+        /**append links*/
+        _svg5.append("g").attr("transform", "translate(40,0)").selectAll("path").data(links).enter().append("path").attr("fill", "none").style("stroke", "#ccc").style("stroke-width", "1.5px").attr("d", d3.linkHorizontal().x(function (d) {
+            return d.y;
+        }).y(function (d) {
+            return d.x;
+        }));
+        /*append circle*/
+        _svg5.append('g').attr("transform", "translate(40,0)").selectAll("circle").data(nodes).enter().append("circle").attr("fill", "#fff").style("stroke", "orange").style("stroke-width", "1.5px").attr('cx', function (d) {
+            return d.y;
+        }).attr('cy', function (d) {
+            return d.x;
+        }).attr("r", 5);
+        /*append text*/
+        _svg5.append('g').attr("transform", "translate(40,0)").selectAll('text').data(nodes).enter().append('text').attr('x', function (d) {
+            return d.y;
+        }).attr('y', function (d) {
+            return d.x;
+        }).text(function (d) {
+            return d.data.name;
+        }).style("text-anchor", function (d) {
+            return d.children ? "end" : "start";
+        }).attr("dx", function (d) {
+            return d.children ? -10 : 10;
+        }).attr('dy', 5);
+    });
+}
+// #Pack Chart
+{
+    var _width5 = 500,
+        _height5 = 500,
+        skyBlue = "rgb(31, 119, 180)",
+        _svg6 = d3.select("#pack-chart").select("figure").append('svg').attr('width', _width5).attr('height', _height5);
+    d3.json('../store/json/city.json?t=' + new Date().getTime()).then(function (json) {
+        var packCreator = d3.pack().size([_width5, _height5]).padding(3),
+            hierarchyData = d3.hierarchy(json, function (d) {
+            return d.children;
+        }) //基于基础数据生成hierarchy数据
+        .sum(function (d) {
+            return d.number || 500;
+        }),
+            packData = packCreator(hierarchyData),
+            nodes = packData.descendants(),
+            gCircles = _svg6.selectAll('g').data(nodes).enter().append('g').attr("transform", function (d) {
+            return "translate(" + d.x + ", " + d.y + ")";
+        });
+        gCircles.append('circle').attr('r', function (d) {
+            return d.r;
+        }).style("fill", function (d) {
+            return d.value >= 1000 && !d.children ? "orange" : skyBlue;
+        }).attr("fill-opacity", "0.5").on("mouseover", function (d, i) {
+            d3.select(this).style("fill", d.value >= 1000 && !d.children ? "red" : "#D7FAE1");
+        }).on("mouseout", function (d, i) {
+            d3.select(this).transition().style("fill", d.value >= 1000 && !d.children ? "orange" : skyBlue);
+        });
+        gCircles.filter(function (d) {
+            return !d.children;
+        }).append('text').style('fill', '#fff').style('font-size', '12px').text(function (d) {
+            return d.data.name;
+        });
+        gCircles.filter(function (d) {
+            return d.children;
+        }).append("title").text(function (d) {
+            return d.data.name;
+        });
+    });
+}
+// #Geo Chart
+{
+    var _width6 = 950,
+        _height6 = 750,
+        _color3 = d3.schemeCategory10.concat(d3.schemePaired, d3.schemeSet3),
+        _svg7 = d3.select("#geo-chart").select("figure").append('svg').attr('width', _width6).attr('height', _height6).attr("viewBox", "0 0 " + _width6 + " " + _height6).call(d3.zoom().scaleExtent([0.2, 5]).on("zoom", function () {
+        _svg7.selectAll('path').attr("transform", d3.event.transform);
+        _svg7.selectAll('text').attr("transform", d3.event.transform);
+    }));
+    var projection = d3.geoMercator(),
+        path = d3.geoPath().projection(projection);
+    d3.json('../store/json/china.geojson?t=' + new Date().getTime()).then(function (json) {
+        projection.fitSize([_width6, _height6], json);
+        /*append path*/
+        _svg7.selectAll('path').data(json.features).enter().append('path').attr('stroke', '#000').attr('stroke-width', 1).style('cursor', 'pointer').attr('fill', function (d, i) {
+            return _color3[i];
+        }).attr('d', path).on('mouseover', function (d, i) {
+            d3.select(this).attr('fill', 'yellow');
+        }).on('mouseout', function (d, i) {
+            d3.select(this).attr('fill', _color3[i]);
+        });
+        /*append text*/
+        _svg7.selectAll("text").data(json.features).enter().append("text").text(function (d) {
+            return d.properties.name;
+        }).attr('dx', function (d) {
+            return path.centroid(d)[0];
+        }).attr('dy', function (d) {
+            return path.centroid(d)[1];
+        }).attr('fill', '#000').attr('font-size', '14px').attr('text-anchor', 'middle');
     });
 }
 console.log();

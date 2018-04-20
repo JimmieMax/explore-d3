@@ -362,7 +362,6 @@ import * as d3 from "d3";
         , g_outer = svg.append("g")
         , ribbon = d3.ribbon()//draw ribbon
             .radius(innerRadius);
-    console.log('grous，chords', groups, chords);
     g_outer.selectAll("path")//append outer
         .data(groups)
         .enter()
@@ -380,8 +379,8 @@ import * as d3 from "d3";
         })
         .attr("dy", ".35em")
         .attr("transform", d => "rotate(" + (d.angle * 180 / Math.PI) + ")" +
-                "translate(0," + -1.0 * (outRadius + 10) + ")" +
-                ((d.angle > Math.PI * 3 / 4 && d.angle < Math.PI * 5 / 4) ? "rotate(180)" : ""))
+            "translate(0," + -1.0 * (outRadius + 10) + ")" +
+            ((d.angle > Math.PI * 3 / 4 && d.angle < Math.PI * 5 / 4) ? "rotate(180)" : ""))
         .text(d => d.name);
     svg.append('g')/*append ribbon*/
         .selectAll('path')
@@ -403,5 +402,154 @@ import * as d3 from "d3";
                 .duration(1000)
                 .style('fill', color[d.source.index]);
         })
+}
+// #Cluster Chart
+{
+    const width = 600
+        , height = 600
+        , svg = d3.select("#cluster-chart").select("figure")
+            .append('svg')
+            .attr('width', width)
+            .attr('height', height);
+    d3.json('../store/json/area.json?t=' + new Date().getTime()).then(function (json) {
+        const clusterCreator = d3.cluster().size([width, height - 200])
+            , hierarchyData = d3.hierarchy(json)
+            , clusterData = clusterCreator(hierarchyData)
+            /*nodes*/
+            , nodes = clusterData.descendants()
+            /*links*/
+            , links = clusterData.links();
+        /**append links*/
+        svg.append("g")
+            .attr("transform", "translate(40,0)").selectAll("path")
+            .data(links)
+            .enter()
+            .append("path")
+            .attr("fill", "none")
+            .style("stroke", "#ccc")
+            .style("stroke-width", "1.5px")
+            .attr("d", d3.linkHorizontal().x(d => d.y).y(d => d.x));
+        /*append circle*/
+        svg.append('g')
+            .attr("transform", "translate(40,0)").selectAll("circle")
+            .data(nodes)
+            .enter()
+            .append("circle")
+            .attr("fill", "#fff")
+            .style("stroke", "orange")
+            .style("stroke-width", "1.5px")
+            .attr('cx', d => d.y)
+            .attr('cy', d => d.x)
+            .attr("r", 5);
+        /*append text*/
+        svg.append('g')
+            .attr("transform", "translate(40,0)").selectAll('text')
+            .data(nodes)
+            .enter()
+            .append('text')
+            .attr('x', d => d.y)
+            .attr('y', d => d.x)
+            .text(d => d.data.name)
+            .style("text-anchor", d => d.children ? "end" : "start")
+            .attr("dx", d => d.children ? -10 : 10)
+            .attr('dy', 5)
+    })
+}
+// #Pack Chart
+{
+    const width = 500
+        , height = 500
+        , skyBlue = "rgb(31, 119, 180)"
+        , svg = d3.select("#pack-chart").select("figure")
+            .append('svg')
+            .attr('width', width)
+            .attr('height', height);
+    d3.json('../store/json/city.json?t=' + new Date().getTime())
+        .then(function (json) {
+            const packCreator = d3.pack().size([width, height]).padding(3)
+                , hierarchyData = d3.hierarchy(json, d => d.children)//基于基础数据生成hierarchy数据
+                    .sum(d => d.number || 500)
+                , packData = packCreator(hierarchyData)
+                , nodes = packData.descendants()
+                , gCircles = svg
+                    .selectAll('g')
+                    .data(nodes)
+                    .enter()
+                    .append('g')
+                    .attr("transform", d => `translate(${d.x}, ${d.y})`);
+            gCircles.append('circle')
+                .attr('r', d => d.r)
+                .style("fill", d => (d.value >= 1000 && !d.children) ? "orange" : skyBlue)
+                .attr("fill-opacity", "0.5")
+                .on("mouseover", function (d, i) {
+                    d3.select(this)
+                        .style("fill", (d.value >= 1000 && !d.children) ? "red" : "#D7FAE1");
+                })
+                .on("mouseout", function (d, i) {
+                    d3.select(this)
+                        .transition()
+                        .style("fill", (d.value >= 1000 && !d.children) ? "orange" : skyBlue);
+                });
+            gCircles.filter(d => !d.children)
+                .append('text')
+                .style('fill', '#fff')
+                .style('font-size', '12px')
+                .text(d => d.data.name)
+            gCircles.filter(d => d.children)
+                .append("title")
+                .text(d => d.data.name);
+        });
+}
+// #Geo Chart
+{
+    const width = 950
+        , height = 750
+        , color = d3.schemeCategory10.concat(d3.schemePaired, d3.schemeSet3)
+        , svg = d3.select("#geo-chart").select("figure")
+            .append('svg')
+            .attr('width', width)
+            .attr('height', height)
+            .attr("viewBox", "0 0 " + width + " " + height)
+            .call(d3.zoom().scaleExtent([0.2, 5]).on("zoom", function () {
+                svg.selectAll('path')
+                    .attr("transform", d3.event.transform);
+                svg.selectAll('text')
+                    .attr("transform", d3.event.transform);
+            }));
+    const projection = d3.geoMercator()
+        , path = d3.geoPath()
+            .projection(projection);
+    d3.json('../store/json/china.geojson?t=' + new Date().getTime()).then(function (json) {
+        projection.fitSize([width, height], json);
+        /*append path*/
+        svg.selectAll('path')
+            .data(json.features)
+            .enter()
+            .append('path')
+            .attr('stroke', '#000')
+            .attr('stroke-width', 1)
+            .style('cursor', 'pointer')
+            .attr('fill', (d, i) => color[i])
+            .attr('d', path)
+            .on('mouseover', function (d, i) {
+                d3.select(this)
+                    .attr('fill', 'yellow');
+            })
+            .on('mouseout', function (d, i) {
+                d3.select(this)
+                    .attr('fill', color[i])
+            });
+        /*append text*/
+        svg.selectAll("text")
+            .data(json.features)
+            .enter()
+            .append("text")
+            .text(d => d.properties.name)
+            .attr('dx', d => path.centroid(d)[0])
+            .attr('dy', d => path.centroid(d)[1])
+            .attr('fill', '#000')
+            .attr('font-size', '14px')
+            .attr('text-anchor', 'middle');
+    });
 }
 console.log();
